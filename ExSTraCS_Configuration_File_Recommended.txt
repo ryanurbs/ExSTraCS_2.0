@@ -1,0 +1,49 @@
+#######################################################################################################################################
+######Example of an ExSTraCS (Recommended) Configuration File: lines beginning with '#' will not be loaded. '=' assigns a value to a run parameter.
+###### - Default parameter values are included for each.  Note that the default value for 'testFile' is actually 'None', and a default value is not available for 'trainFile'.
+#######################################################################################################################################
+######Data format: Data sets should be tab-delimited (.txt) file.  They should include a header with attribute identifiers, and one column labeled "Class" with respective class labels for each instance in the data.
+######				You have the option of including a column labeled "InstanceID" which includes a unique identifier for each instance in the data set.  Instance ID's are 
+######				useful for clustering instances in your data set later by the attribute tracking scores for each instance.
+######---------------------------------------------------------------------------------------------------------------------------------
+######Dataset Parameters
+######---------------------------------------------------------------------------------------------------------------------------------
+trainFile=Datasets/20_1600_Het_0.4_0.2_50_EDM-2_001_CV_0_Train#	    Training file is required (Can optionally include .txt extension in filename.)
+testFile=Datasets/20_1600_Het_0.4_0.2_50_EDM-2_001_CV_0_Test#		Testing file is optional. If no testing data available or desired, put 'None'.  Default is 'None' (Can optionally include .txt extension in filename.)
+outFileName=Local_Output/#											Optional output filepath and filename prefix.
+labelInstanceID=InstanceID#									Label for the data column containing instance ID's
+labelPhenotype=Class#										Label for the data column containing the phenotype label
+discreteAttributeLimit=10#									The maximum number of attribute states allowed before an attribute is considered to be continuous. User must make sure this value is set >= the number of states for any attributes in their dataset.
+labelMissingData=NA#										Indicates how missing data is labeled in the data set.
+######---------------------------------------------------------------------------------------------------------------------------------
+######General Run Parameters
+######---------------------------------------------------------------------------------------------------------------------------------
+trackingFrequency=0#	If 0, then learning tracking will run every epoch (i.e. every pass through all instances in the training data). Otherwise it will occur after the specified number of learning iterations.
+learningIterations=5000.10000.20000.100000#					Specify every iteration at which a full algorithm evaluation will be conducted and output files saved.  The last/largest value indicates the stopping point. Separate values with a period (.).
+######---------------------------------------------------------------------------------------------------------------------------------
+######Supervised Learning Parameters (Learning parameter identifiers largely in line with Butz and Wilson 2001 "An algorithmic description of XCS", but only relevant supervised learning parameters from Bernado-Mansilla and Garrell-Guiu 2003 are utilized.)
+######---------------------------------------------------------------------------------------------------------------------------------
+N=1000# 		Maximum size of the population (in micro-classifiers, i.e. N is the sum of the classifier numerosities)
+nu=1# 			(v)Power parameter used to determine the importance of high accuracy when calculating fitness. (typically set to 5-10 for clean problems, however we have observed that a value of 1 is better for noisy problems)
+######---------------------------------------------------------------------------------------------------------------------------------
+######Attribute Tracking and Feedback (ExSTraCS long-term memory, implemented to characterize heterogeneous patterns, and refine learning.) Tracking must be on, for feedback to be used.
+######---------------------------------------------------------------------------------------------------------------------------------
+doAttributeTracking=1#		1 is True, 0 is False
+doAttributeFeedback=1#		1 is True, 0 is False
+######---------------------------------------------------------------------------------------------------------------------------------
+######Expert Knowledge (Use a specifically formatted expert knowledge file to weight rule covering in ExSTraCS towards attributes more likely to be predictive.)
+######---------------------------------------------------------------------------------------------------------------------------------
+useExpertKnowledge=1#			1 is True, 0 is False
+external_EK_Generation=None#	Specify the file/path for a properly formatted expert knowledge file.  If internal EK is to be used, put `None'. (.txt extension should be left out)
+outEKFileName=Local_Output/# 			Optional EK output filepath and filename beginning, used when EK scores are generated internally within ExSTraCS.
+filterAlgorithm=multisurf#		Specify the filter algorithm to use 'relieff','surf','surfstar','multisurf' and add TuRF with 'relieff_turf','surf_turf','surfstar_turf','multisurf_turf'.
+######---------------------------------------------------------------------------------------------------------------------------------
+######Rule Compaction (Following ExSTraCS run completion, this mechanism seeks to remove useless rules and obtain a more refined rule subset while preserving predictive accuracy.)
+######---------------------------------------------------------------------------------------------------------------------------------
+doRuleCompaction=1#			1 is True, 0 is False  
+ruleCompactionMethod=QRF#	Select strategy of rule compaction. Options include 'QRF', 'PDRC', 'QRC', 'CRA2', 'Fu2' and 'Fu1'.  Other strategies may be added in the future.  QRF recommended as the fastest, simplest, and mostly likely to improve/preserve performance.
+######---------------------------------------------------------------------------------------------------------------------------------
+######PopulationReboot (Restart ExSTraCS learning from a saved rule population. TrainingData is re-shuffled during reboot.)
+######---------------------------------------------------------------------------------------------------------------------------------
+doPopulationReboot=0#			1 is True, 0 is False. Load an existing rule population to allow for continued evolution of rule population.  Required to be true when onlyRC is True.
+popRebootIteration=100000#		Uses outEKFileName and iteration specified here to construct path to existing rule population for reboot.

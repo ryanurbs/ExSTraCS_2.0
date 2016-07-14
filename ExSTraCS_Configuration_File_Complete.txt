@@ -1,0 +1,79 @@
+#######################################################################################################################################
+######Example of an ExSTraCS (Complete) Configuration File: lines beginning with '#' will not be loaded. '=' assigns a value to a run parameter.
+###### - Default parameter values are included for each.  Note that the default value for 'testFile' is actually 'None', and a default value is not available for 'trainFile'.
+#######################################################################################################################################
+######Data format: Data sets should be tab-delimited (.txt) file.  They should include a header with attribute identifiers, and one column labeled "Class" with respective class labels for each instance in the data.
+######				You have the option of including a column labeled "InstanceID" which includes a unique identifier for each instance in the data set.  Instance ID's are 
+######				useful for clustering instances in your data set later by the attribute tracking scores for each instance.
+######---------------------------------------------------------------------------------------------------------------------------------
+######Dataset Parameters
+######---------------------------------------------------------------------------------------------------------------------------------
+trainFile=Datasets/20Multiplexer_Data_10000_0#20_1600_Het_0.4_0.2_75_EDM-2_001_CV_0_Train#20_1600_Het_0.4_0.2_50_EDM-2_001_CV_0_Train#	    Training file is required (Can optionally include .txt extension in filename.)
+testFile=Datasets/20Multiplexer_Data_10000_1#20_1600_Het_0.4_0.2_75_EDM-2_001_CV_0_Test#20_1600_Het_0.4_0.2_50_EDM-2_001_CV_0_Test#	Testing file is optional. If no testing data available or desired, put 'None' (no quotes).  Default is 'None' (Can optionally include .txt extension in filename.)
+outFileName=Local_Output/#									Optional output filepath and filename prefix.
+offlineData=1#												Is ExSTraCS loading a finite dataset(1= TRUE), or is it being fed data online from an 'infinite' source (e.g. some other environment such as a multiplexer problem feed (0=False)
+internalCrossValidation=0#									1 is True, 0 is False; Generate CV dataset files and run ExSTraCS on them serially. (NOT FULLY TESTED)
+randomSeed=1#												Use a fixed random seed? If no put (False), if yes, set the random seed value as an integer.
+labelInstanceID=InstanceID#									Label for the data column containing instance ID's
+labelPhenotype=Class#										Label for the data column containing the phenotype label
+discreteAttributeLimit=10#									The maximum number of attribute states allowed before an attribute is considered to be continuous. User must make sure this value is set >= the number of states for any attributes in their dataset.
+labelMissingData=NA#										Indicates how missing data is labeled in the data set.
+######---------------------------------------------------------------------------------------------------------------------------------
+######General Run Parameters
+######---------------------------------------------------------------------------------------------------------------------------------
+trackingFrequency=0#	If 0, then learning tracking will run every epoch (i.e. every pass through all instances in the training data). Otherwise it will occur after the specified number of learning iterations.
+learningIterations=5000.10000.20000.50000#.100000#					Specify every iteration at which a full algorithm evaluation will be conducted and output files saved.  The last/largest value indicates the stopping point. Separate values with a period (.).
+outputSummary=1#											1 is True, 0 is False
+outputPopulation=1#											1 is True, 0 is False
+outputAttCoOccur=1#											1 is True, 0 is False
+outputTestPredictions=1#									1 is True, 0 is False
+######---------------------------------------------------------------------------------------------------------------------------------
+######Supervised Learning Parameters (Learning parameter identifiers largely in line with Butz and Wilson 2001 "An algorithmic description of XCS", but only relevant supervised learning parameters from Bernado-Mansilla and Garrell-Guiu 2003 are utilized.)
+######---------------------------------------------------------------------------------------------------------------------------------
+N=2000# 		Maximum size of the population (in micro-classifiers, i.e. N is the sum of the classifier numerosities)
+nu=1# 			(v)Power parameter used to determine the importance of high accuracy when calculating fitness. (typically set to 5-10 for clean problems, however we have observed that a value of 1 is better for noisy problems)
+chi=0.8# 		(X)The probability of applying crossover in the GA. (typically set to 0.5-1.0)
+upsilon=0.04# 	(u)The probability of mutating an allele within an offspring.(typically set to 0.01-0.05)
+theta_GA=25# 	The GA threshold; The GA is applied in a set when the average time since the last GA in the set is greater than theta_GA.
+theta_del=20#	The experience deletion threshold; The calculation of the deletion probability changes once this threshold is passed.
+theta_sub=20#	The experience subsumption threshold;
+acc_sub=0.99#	Subsumption accuracy requirement
+beta=0.2#		Learning parameter; Used in calculating average correct set size
+delta=0.1#		Deletion parameter; Used in determining deletion vote calculation.
+init_fit=0.01#	The initial fitness for a new classifier. (typically very small --> zero)
+fitnessReduction=0.1#	Initial fitness reduction in GA offspring rules.
+theta_sel=0.5#	The fraction of the correct set to be included in tournament selection.
+RSL_Override=0#	Optional: Allows manual specification of a rule specificity limit (RSL).  Any value greater than zero will overide the automatic RSL calculation.
+######---------------------------------------------------------------------------------------------------------------------------------
+######Mechanism Parameters
+######---------------------------------------------------------------------------------------------------------------------------------
+doSubsumption=1#				1 is True, 0 is False
+selectionMethod=tournament#		Genetic Algorithm selection mechanism; You may specify either 'tournament' or 'roulette'.
+######---------------------------------------------------------------------------------------------------------------------------------
+######Attribute Tracking and Feedback (ExSTraCS long-term memory, implemented to characterize heterogeneous patterns, and refine learning.) Tracking must be on, for feedback to be used.
+######---------------------------------------------------------------------------------------------------------------------------------
+doAttributeTracking=1#		1 is True, 0 is False
+doAttributeFeedback=1#		1 is True, 0 is False
+######---------------------------------------------------------------------------------------------------------------------------------
+######Expert Knowledge (Use a specifically formatted expert knowledge file to weight rule covering in ExSTraCS towards attributes more likely to be predictive.)
+######---------------------------------------------------------------------------------------------------------------------------------
+useExpertKnowledge=1#			1 is True, 0 is False
+external_EK_Generation=None#	Specify the file/path for a properly formatted expert knowledge file.  If internal EK is to be used, put `None'. (.txt extension should be left out)
+outEKFileName=Local_Output/# 			Optional EK output filepath and filename beginning, used when EK scores are generated internally within ExSTraCS.
+filterAlgorithm=multisurf#		Specify the filter algorithm to use 'relieff','surf','surfstar','multisurf' and add TuRF with 'relieff_turf','surf_turf','surfstar_turf','multisurf_turf'.
+turfPercent=0.2#
+reliefNeighbors=10#				The number of neighbors considered in the Relief calculations.
+reliefSampleFraction=1#			The number of EK weight algorithm iterations.  Given as percent of dataset instances (0-1) 1 is suggested.
+onlyEKScores=0#					1 is True, 0 is False. If True, will skip running LCS and just run the filter algorithm on the specified training dataset.
+######---------------------------------------------------------------------------------------------------------------------------------
+######Rule Compaction (Following ExSTraCS run completion, this mechanism seeks to remove useless rules and obtain a more refined rule subset while preserving predictive accuracy.)
+######---------------------------------------------------------------------------------------------------------------------------------
+doRuleCompaction=1#			1 is True, 0 is False  
+onlyRC=0#					1 is True, 0 is False. If True, will skip running LCS and just run rule compaction on a pre-existing rule population file. This requires PopulationReboot to be True
+ruleCompactionMethod=QRF#	Select strategy of rule compaction. Options include 'QRF', 'PDRC', 'QRC', 'CRA2', 'Fu2' and 'Fu1'.  Other strategies may be added in the future.  QRF recommended as the fastest, simplest, and mostly likely to improve/preserve performance.
+######---------------------------------------------------------------------------------------------------------------------------------
+######PopulationReboot (Restart ExSTraCS learning from a saved rule population. TrainingData is re-shuffled during reboot.)
+######---------------------------------------------------------------------------------------------------------------------------------
+doPopulationReboot=0#			1 is True, 0 is False. Load an existing rule population to allow for continued evolution of rule population.  Required to be true when onlyRC is True.
+popRebootIteration=100000#		Uses outEKFileName and iteration specified here to construct path to existing rule population for reboot.
+onlyTest=0#						1 is True, 0 is False;Load an existing rule population and apply it to a testing dataset.  No learning occurs.

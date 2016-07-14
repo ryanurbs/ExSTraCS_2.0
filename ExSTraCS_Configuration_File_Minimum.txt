@@ -1,0 +1,11 @@
+#######################################################################################################################################
+######Example of an ExSTraCS (Minimum) Configuration File: lines beginning with '#' will not be loaded. '=' assigns a value to a run parameter.
+###### - Default parameter values are included for each.  Note that the default value for 'testFile' is actually 'None', and a default value is not available for 'trainFile'.
+#######################################################################################################################################
+######Data format: Data sets should be tab-delimited (.txt) file.  They should include a header with attribute identifiers, and one column labeled "Class" with respective class labels for each instance in the data.
+######				You have the option of including a column labeled "InstanceID" which includes a unique identifier for each instance in the data set.  Instance ID's are 
+######				useful for clustering instances in your data set later by the attribute tracking scores for each instance.
+######---------------------------------------------------------------------------------------------------------------------------------
+######Dataset Parameters
+######---------------------------------------------------------------------------------------------------------------------------------
+trainFile=Datasets/20_1600_Het_0.4_0.2_50_EDM-2_001_CV_0_Train#	    Training file is required (Can optionally include .txt extension in filename.)
