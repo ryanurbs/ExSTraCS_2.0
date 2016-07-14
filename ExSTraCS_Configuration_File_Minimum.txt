@@ -8,4 +8,4 @@
 ######---------------------------------------------------------------------------------------------------------------------------------
 ######Dataset Parameters
 ######---------------------------------------------------------------------------------------------------------------------------------
-trainFile=Datasets/20_1600_Het_0.4_0.2_50_EDM-2_001_CV_0_Train#	    Training file is required (Can optionally include .txt extension in filename.)
+trainFile=Datasets/11Multiplexer_Data_2000_0#	    Training file is required (Can optionally include .txt extension in filename.)
