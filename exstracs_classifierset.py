@@ -349,7 +349,7 @@ class ClassifierSet:
                     if self.popSet[j].fitness > bestF:
                         bestF = self.popSet[j].fitness
                         bestC = j
-                setList.remove(j) #select without re-sampling
+                setList.remove(bestC) #select without re-sampling
                 selectList[currentCount] = self.popSet[bestC]
                 currentCount += 1
         elif len(setList) == 2:
